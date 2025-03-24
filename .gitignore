@@ -1,0 +1,4 @@
+venvgull
+__pycache__
+*.twb
+data/*.csv
