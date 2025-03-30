@@ -8,12 +8,13 @@ from folium.plugins import PolyLineTextPath
 df_gull = pd.read_csv("data/gull.csv")
 
 # Filtrar por individuos deseados
-identificadores_deseados = ["PC70", "PC66", "PC71"]
+#identificadores_deseados = ["PC70", "PC66", "PC71"]
+identificadores_deseados = ["PC1", "PC28", "PC39"]
 df_gull = df_gull[df_gull["individual-local-identifier"].isin(identificadores_deseados)]
 
 # Convertir fecha y filtrar por año 2010
 df_gull["timestamp"] = pd.to_datetime(df_gull["timestamp"])
-df_gull = df_gull[df_gull["timestamp"].dt.year == 2010]
+df_gull = df_gull[df_gull["timestamp"].dt.year == 2008]
 
 # Renombrar columnas
 df_gull.rename(columns={'individual-local-identifier': 'Pajaro', 'location-long': 'Longitud', 'location-lat': 'Latitud'}, inplace=True)
@@ -22,7 +23,7 @@ df_gull.rename(columns={'individual-local-identifier': 'Pajaro', 'location-long'
 m = folium.Map(location=[df_gull["Latitud"].mean(), df_gull["Longitud"].mean()], zoom_start=6)
 
 # Asignar colores
-colores = {'PC70': 'green', 'PC66': 'purple', 'PC71': 'yellow'}
+colores = {identificador: color for identificador, color in zip(identificadores_deseados, ['green', 'purple', 'yellow'])}
 
 # Agregar puntos y convex hulls al mapa
 for pajaro, grupo in df_gull.groupby("Pajaro"):
@@ -59,10 +60,10 @@ legend_html = '''
     background-color: white; z-index:9999; font-size:14px;
     border:2px solid grey; padding: 10px; opacity: 0.9;
 ">
-<b> Leyenda </b><br>
-<span style="color: green;">&#9679;</span> PC70 <br>
-<span style="color: purple;">&#9679;</span> PC66 <br>
-<span style="color: yellow;">&#9679;</span> PC71 <br>
+<b> Identificador GPS </b><br>
+<span style="color: green;">&#9679;</span> PC1 <br>
+<span style="color: purple;">&#9679;</span> PC28 <br>
+<span style="color: yellow;">&#9679;</span> PC29 <br>
 </div>
 '''
 m.get_root().html.add_child(folium.Element(legend_html))
